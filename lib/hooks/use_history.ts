@@ -62,13 +62,15 @@ export const useHistory = (): UseHistoryState => {
   };
 
   useEffect(() => {
-    (async () => {
-      const canUseIndexedDb = await initIndexedDb();
-      setCanUseIndexedDb(canUseIndexedDb);
-      if (canUseIndexedDb) {
-        setHistories(await listHistory());
-      }
-    })();
+    if (typeof window !== "undefined") {
+      (async () => {
+        const canUseIndexedDb = await initIndexedDb();
+        setCanUseIndexedDb(canUseIndexedDb);
+        if (canUseIndexedDb) {
+          setHistories(await listHistory());
+        }
+      })();
+    }
   }, [setCanUseIndexedDb]);
 
   return { canUseHistory: canUseIndexedDb, histories, addHistory };

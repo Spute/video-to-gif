@@ -10,7 +10,7 @@ interface DateTime {
 export const getDateTime = (date: Date): DateTime => {
   const year = date.getFullYear().toString();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDay().toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0"); // 修复：使用getDate()而不是getDay()
   const hour = date.getHours().toString().padStart(2, "0");
   const minute = date.getMinutes().toString().padStart(2, "0");
   const second = date.getSeconds().toString().padStart(2, "0");

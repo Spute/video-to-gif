@@ -1,4 +1,7 @@
 const getFFmpeg = () => {
+  if (typeof window === "undefined") {
+    throw new Error("FFmpeg can only be used in browser environment.");
+  }
   if (!("FFmpeg" in window)) {
     throw new Error("FFmpeg could not be loaded.");
   } else if (!("SharedArrayBuffer" in window)) {
@@ -52,6 +55,9 @@ export const convVideoToGif = async (file: File, settings: ConvertSetting): Prom
 };
 
 export const checkCanUseFFmpeg = (): /* errorMessage: */ string | null => {
+  if (typeof window === "undefined") {
+    return "FFmpeg can only be used in browser environment.";
+  }
   try {
     getFFmpeg();
     return null;

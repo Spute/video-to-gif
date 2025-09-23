@@ -1,8 +1,9 @@
-module.exports = {
+const nextConfig = {
+  output: "export", // 为了支持静态导出
   async headers() {
     return [
       {
-        source: "/",
+        source: "/:path*",
         headers: [
           {
             key: "Cross-Origin-Opener-Policy",
@@ -17,3 +18,5 @@ module.exports = {
     ];
   },
 };
+
+module.exports = nextConfig;

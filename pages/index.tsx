@@ -3,7 +3,7 @@ import Head from "next/head";
 import { DropOrPasteVideo } from "../components/drop_or_paste_video";
 import { SelectVideoFile } from "../components/select_video_file";
 import { checkCanUseFFmpeg, convVideoToGif } from "../lib/ffmpeg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "../lib/hooks/use_history";
 import { Header } from "../components/header";
 import { Content } from "../components/content";
@@ -15,10 +15,29 @@ import { Status } from "../components/status";
 
 const Home = () => {
   const [status, setStatus] = useState(null);
+  const [FFmpegErrorMessage, setFFmpegErrorMessage] = useState<string | null>(null);
   const { setVideoFile, videoFile, videoUrl, convertSetting, updateConvertSetting } = useConvertSetting();
   const { addHistory, histories } = useHistory();
 
-  const FFmpegErrorMessage = checkCanUseFFmpeg();
+  useEffect(() => {
+    // 动态加载ffmpeg脚本
+    const script = document.createElement("script");
+    script.src = "/ffmpeg.min.js";
+    script.onload = () => {
+      setFFmpegErrorMessage(checkCanUseFFmpeg());
+    };
+    script.onerror = () => {
+      setFFmpegErrorMessage("Failed to load FFmpeg script");
+    };
+    document.head.appendChild(script);
+
+    return () => {
+      // 清理脚本
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, []);
 
   const transcode = async (): Promise<void> => {
     if (status != null || videoFile == null) return;
@@ -49,7 +68,6 @@ const Home = () => {
         <meta name="twitter:image" content="https://video-to-gif.vercel.app/logo_1200x1200.png" />
         <meta name="twitter:site" content="@mryhryki" />
         <title>Video to GIF</title>
-        <script src="/ffmpeg.min.js" />
       </Head>
 
       <DropOrPasteVideo onVideoFileDrop={setVideoFile}>
