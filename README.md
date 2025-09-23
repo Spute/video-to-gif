@@ -71,7 +71,7 @@ npm run build
 ## 浏览限制与问题
 - 大文件无法处理：因在内存中运行，转换大视频容易报错。
 - 浏览器兼容性差：依赖 SharedArrayBuffer，在部分浏览器（如 IE）不可用。可以使用[caniuse](https://caniuse.com/?search=SharedArrayBuffer)查看浏览器是否支持SharedArrayBuffer
-![浏览器兼容](./assets/Snipaste_2025-09-23_14-15-56.png)
+![浏览器兼容](https://github.com/Spute/video-to-gif/raw/main/assets/caniuse.png)
 
 ## 项目结构
 
