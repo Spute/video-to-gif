@@ -16,7 +16,7 @@
 - 🔒 **隐私保护** - 所有处理都在本地完成
 
 效果展示：
-![GIF-demo](./assets/demo.gif)
+![GIF-demo](https://github.com/Spute/video-to-gif/raw/main/assets/demo.gif)
 
 ## 技术栈
 
