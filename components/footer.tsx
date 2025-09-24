@@ -21,9 +21,13 @@ const Copyright = styled.a`
 
 export const Footer = () => (
   <StyledFooter>
-    &copy; 2020{" "}
-    <Copyright href="https://mryhryki.com/" target="_blank" rel="noreferrer noopener">
-      mryhryki
+    &copy; 2025{" "}
+    <Copyright
+      href="https://iixchzsb7i.feishu.cn/wiki/Otndwji7mix3cukOktGcNzVZnbg"
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      回响笔记
     </Copyright>
   </StyledFooter>
 );
