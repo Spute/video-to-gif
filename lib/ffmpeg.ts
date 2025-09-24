@@ -34,11 +34,15 @@ export const convVideoToGif = async (file: File, settings: ConvertSetting): Prom
   const { frameRate, sizeType, sizePixel, rangeStart, rangeEnd } = settings;
 
   const { fetchFile } = getFFmpeg();
-  ffmpeg.FS("writeFile", file.name, await fetchFile(file));
+  // 使用固定的文件名避免中文路径问题
+  const inputFileName = "input_video";
+  const outputFileName = "output.gif";
+
+  ffmpeg.FS("writeFile", inputFileName, await fetchFile(file));
 
   await ffmpeg.run(
     "-i",
-    file.name,
+    inputFileName,
     "-r",
     `${frameRate}`,
     "-ss",
@@ -49,9 +53,9 @@ export const convVideoToGif = async (file: File, settings: ConvertSetting): Prom
     `scale=${sizeType === "width" ? sizePixel : -1}:${
       sizeType === "height" ? sizePixel : -1
     },fade=t=in:st=${rangeStart}:d=0.05`,
-    "output.gif"
+    outputFileName
   );
-  return ffmpeg.FS("readFile", "output.gif").buffer;
+  return ffmpeg.FS("readFile", outputFileName).buffer;
 };
 
 export const checkCanUseFFmpeg = (): /* errorMessage: */ string | null => {
