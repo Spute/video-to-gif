@@ -45,6 +45,7 @@ const listHistory = async (): Promise<Array<History>> => {
 
 interface UseHistoryState {
   addHistory: (gifData: Blob) => Promise<void>;
+  clearHistory: () => Promise<void>;
   canUseHistory: boolean;
   histories: History[];
 }
@@ -61,6 +62,15 @@ export const useHistory = (): UseHistoryState => {
       .then(setHistories);
   };
 
+  const clearHistory = async (): Promise<void> => {
+    if (!canUseIndexedDb) return;
+    const histories = getHistoriesTable();
+    if (histories != null) {
+      await histories.clear();
+      setHistories([]);
+    }
+  };
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       (async () => {
@@ -73,5 +83,5 @@ export const useHistory = (): UseHistoryState => {
     }
   }, [setCanUseIndexedDb]);
 
-  return { canUseHistory: canUseIndexedDb, histories, addHistory };
+  return { canUseHistory: canUseIndexedDb, histories, addHistory, clearHistory };
 };

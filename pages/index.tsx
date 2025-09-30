@@ -22,7 +22,7 @@ const Home = () => {
   // 使用自定义hook获取和设置视频文件、转换参数等
   const { setVideoFile, videoFile, videoUrl, convertSetting, updateConvertSetting } = useConvertSetting();
   // 使用自定义hook获取和添加历史记录
-  const { addHistory, histories } = useHistory();
+  const { addHistory, histories, clearHistory } = useHistory();
 
   // 页面加载时动态加载ffmpeg脚本，并检测是否可用
   useEffect(() => {
@@ -102,7 +102,7 @@ const Home = () => {
             </>
           )}
         </Content>
-        <History histories={histories} /> {/* 显示历史记录 */}
+        <History histories={histories} onClearHistory={clearHistory} /> {/* 显示历史记录 */}
         <Footer /> {/* 页脚 */}
       </DropOrPasteVideo>
     </>

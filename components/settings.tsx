@@ -41,7 +41,7 @@ interface Props {
 
 export const Settings: React.FC<Props> = (props) => {
   const { videoUrl, convertSetting, updateConvertSetting, onConvert, isConverting = false } = props;
-  const { frameRate, sizePixel, sizeType, rangeStart, rangeEnd } = convertSetting;
+  const { frameRate, sizePixel, sizeType, rangeStart, rangeEnd, fadeIn } = convertSetting;
 
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
   useEffect(() => {
@@ -118,6 +118,18 @@ export const Settings: React.FC<Props> = (props) => {
             disabled={isConverting}
           />
           {" sec"}
+        </td>
+      </tr>
+      <tr>
+        <th>Fade In</th>
+        <td>
+          <input
+            type="checkbox"
+            checked={fadeIn}
+            onChange={(event) => updateConvertSetting({ fadeIn: event.target.checked })}
+            disabled={isConverting}
+          />
+          {" 自动添加0.05秒淡入过渡"}
         </td>
       </tr>
       <tr>

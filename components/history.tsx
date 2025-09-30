@@ -51,12 +51,34 @@ const Footer = styled.div`
   text-align: center;
 `;
 
+const ClearButton = styled.button`
+  background-color: #ff6b6b;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 16px auto;
+  padding: 8px 16px;
+  display: block;
+
+  &:hover {
+    background-color: #ff5252;
+  }
+
+  &:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+`;
+
 interface Props {
   histories: HistoryType[];
+  onClearHistory?: () => void;
 }
 
 export const History: React.FC<Props> = (props) => {
-  const { histories } = props;
+  const { histories, onClearHistory } = props;
 
   if (histories.length === 0) {
     return (
@@ -70,6 +92,11 @@ export const History: React.FC<Props> = (props) => {
   return (
     <Wrapper>
       <HistoryTitle>Converted GIFs</HistoryTitle>
+      {onClearHistory && (
+        <ClearButton onClick={onClearHistory}>
+          清除历史记录
+        </ClearButton>
+      )}
       {histories.map((history) => {
         const gifUrl = gifDataToUrl(history.gifData, history.datetime);
         const { year, month, day, hour, minute, second } = getDateTime(new Date(history.datetime));

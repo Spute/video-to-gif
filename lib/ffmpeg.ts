@@ -27,11 +27,12 @@ export interface ConvertSetting {
   sizePixel: number;
   rangeStart: number;
   rangeEnd: number;
+  fadeIn: boolean;
 }
 
 export const convVideoToGif = async (file: File, settings: ConvertSetting): Promise<Blob> => {
   const ffmpeg = await loadFFmpeg();
-  const { frameRate, sizeType, sizePixel, rangeStart, rangeEnd } = settings;
+  const { frameRate, sizeType, sizePixel, rangeStart, rangeEnd, fadeIn } = settings;
 
   const { fetchFile } = getFFmpeg();
   // 使用固定的文件名避免中文路径问题
@@ -39,6 +40,16 @@ export const convVideoToGif = async (file: File, settings: ConvertSetting): Prom
   const outputFileName = "output.gif";
 
   ffmpeg.FS("writeFile", inputFileName, await fetchFile(file));
+
+  // 构建滤镜链
+  let filterChain = `scale=${sizeType === "width" ? sizePixel : -1}:${
+    sizeType === "height" ? sizePixel : -1
+  }`;
+
+  // 如果启用了淡入效果，添加淡入滤镜
+  if (fadeIn) {
+    filterChain += `,fade=t=in:st=${rangeStart}:d=0.05`;
+  }
 
   await ffmpeg.run(
     "-i",
@@ -50,9 +61,7 @@ export const convVideoToGif = async (file: File, settings: ConvertSetting): Prom
     "-to",
     `${rangeEnd}`,
     "-vf",
-    `scale=${sizeType === "width" ? sizePixel : -1}:${
-      sizeType === "height" ? sizePixel : -1
-    },fade=t=in:st=${rangeStart}:d=0.05`,
+    filterChain,
     outputFileName
   );
   return ffmpeg.FS("readFile", outputFileName).buffer;
