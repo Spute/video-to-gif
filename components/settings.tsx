@@ -36,10 +36,11 @@ interface Props {
   updateConvertSetting: (partialConvertSetting: Partial<ConvertSetting>) => void;
   videoUrl: string | null;
   onConvert: () => void;
+  isConverting?: boolean;
 }
 
 export const Settings: React.FC<Props> = (props) => {
-  const { videoUrl, convertSetting, updateConvertSetting, onConvert } = props;
+  const { videoUrl, convertSetting, updateConvertSetting, onConvert, isConverting = false } = props;
   const { frameRate, sizePixel, sizeType, rangeStart, rangeEnd } = convertSetting;
 
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
@@ -72,6 +73,7 @@ export const Settings: React.FC<Props> = (props) => {
             step="1"
             value={frameRate}
             onChange={(event) => updateConvertSetting({ frameRate: parseInt(event.target.value, 10) })}
+            disabled={isConverting}
           />
           {frameRate}FPS
         </td>
@@ -85,6 +87,7 @@ export const Settings: React.FC<Props> = (props) => {
               updateConvertSetting({ sizeType: event.target.value === "height" ? "height" : "width" });
             }}
             value={sizeType}
+            disabled={isConverting}
           >
             <option value="width">Width</option>
             <option value="height">Height</option>
@@ -93,6 +96,7 @@ export const Settings: React.FC<Props> = (props) => {
             type="number"
             value={sizePixel}
             onChange={(event) => updateConvertSetting({ sizePixel: parseInt(event.target.value, 10) })}
+            disabled={isConverting}
           />
           {" (-1 = Auto)"}
         </td>
@@ -104,19 +108,23 @@ export const Settings: React.FC<Props> = (props) => {
             type="number"
             value={rangeStart}
             onChange={(event) => updateConvertSetting({ rangeStart: parseFloat(event.target.value) })}
+            disabled={isConverting}
           />
           {" sec 〜 "}
           <input
             type="number"
             value={rangeEnd}
             onChange={(event) => updateConvertSetting({ rangeEnd: parseFloat(event.target.value) })}
+            disabled={isConverting}
           />
           {" sec"}
         </td>
       </tr>
       <tr>
         <th colSpan={2}>
-          <Button onClick={onConvert}>Convert</Button>
+          <Button onClick={onConvert} disabled={isConverting}>
+            {isConverting ? "Converting..." : "Convert"}
+          </Button>
         </th>
       </tr>
     </Table>

@@ -19,13 +19,22 @@ const UnsupportedWrapper = styled.div`
   width: 100%;
 `;
 
+const ConvertingContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+`;
+
 interface Props {
   errorMessage: string | null;
   children: React.ReactNode;
+  isConverting?: boolean;
 }
 
 export const Content: React.FC<Props> = (props) => {
-  const { errorMessage, children } = props;
+  const { errorMessage, children, isConverting = false } = props;
 
   if (errorMessage != null) {
     return (
@@ -33,6 +42,16 @@ export const Content: React.FC<Props> = (props) => {
         <UnsupportedWrapper>
           <h2>Sorry, {errorMessage} &#x1f647;</h2>
         </UnsupportedWrapper>
+      </Wrapper>
+    );
+  }
+
+  if (isConverting) {
+    return (
+      <Wrapper>
+        <ConvertingContainer>
+          {children}
+        </ConvertingContainer>
       </Wrapper>
     );
   }

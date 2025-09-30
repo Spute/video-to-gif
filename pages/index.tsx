@@ -81,19 +81,26 @@ const Home = () => {
       {/* 主体内容区域 */}
       <DropOrPasteVideo onVideoFileDrop={setVideoFile}>
         <Header />
-        <Content errorMessage={FFmpegErrorMessage}>
+        <Content errorMessage={FFmpegErrorMessage} isConverting={status === "Converting..."}>
           {/* 根据是否有视频文件显示不同内容 */}
-          {videoFile == null ? (
-            <SelectVideoFile onVideoFileSelected={setVideoFile} />
+          {status === "Converting..." ? (
+            <Status>{status}</Status>
           ) : (
-            <Settings
-              convertSetting={convertSetting}
-              updateConvertSetting={updateConvertSetting}
-              videoUrl={videoUrl}
-              onConvert={transcode}
-            />
+            <>
+              {videoFile == null ? (
+                <SelectVideoFile onVideoFileSelected={setVideoFile} />
+              ) : (
+                <Settings
+                  convertSetting={convertSetting}
+                  updateConvertSetting={updateConvertSetting}
+                  videoUrl={videoUrl}
+                  onConvert={transcode}
+                  isConverting={status === "Converting..."}
+                />
+              )}
+              <Status>{status}</Status> {/* 显示转换状态 */}
+            </>
           )}
-          <Status>{status}</Status> {/* 显示转换状态 */}
         </Content>
         <History histories={histories} /> {/* 显示历史记录 */}
         <Footer /> {/* 页脚 */}
