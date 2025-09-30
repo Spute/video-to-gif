@@ -8,7 +8,7 @@ const DefaultConvertSetting: ConvertSetting = {
   sizePixel: -1,
   rangeStart: 0,
   rangeEnd: 0,
-  fadeIn: true,
+  fadeIn: false,
 };
 
 interface UseConvertSettingState {

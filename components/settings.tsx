@@ -129,7 +129,7 @@ export const Settings: React.FC<Props> = (props) => {
             onChange={(event) => updateConvertSetting({ fadeIn: event.target.checked })}
             disabled={isConverting}
           />
-          {" 自动添加0.05秒淡入过渡"}
+          {" 0.05秒淡入过渡"}
         </td>
       </tr>
       <tr>
