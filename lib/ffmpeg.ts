@@ -42,9 +42,7 @@ export const convVideoToGif = async (file: File, settings: ConvertSetting): Prom
   ffmpeg.FS("writeFile", inputFileName, await fetchFile(file));
 
   // 构建滤镜链
-  let filterChain = `scale=${sizeType === "width" ? sizePixel : -1}:${
-    sizeType === "height" ? sizePixel : -1
-  }`;
+  let filterChain = `scale=${sizeType === "width" ? sizePixel : -1}:${sizeType === "height" ? sizePixel : -1}`;
 
   // 如果启用了淡入效果，添加淡入滤镜
   if (fadeIn) {

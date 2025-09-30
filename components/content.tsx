@@ -49,9 +49,7 @@ export const Content: React.FC<Props> = (props) => {
   if (isConverting) {
     return (
       <Wrapper>
-        <ConvertingContainer>
-          {children}
-        </ConvertingContainer>
+        <ConvertingContainer>{children}</ConvertingContainer>
       </Wrapper>
     );
   }

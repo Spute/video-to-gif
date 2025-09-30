@@ -92,11 +92,7 @@ export const History: React.FC<Props> = (props) => {
   return (
     <Wrapper>
       <HistoryTitle>Converted GIFs</HistoryTitle>
-      {onClearHistory && (
-        <ClearButton onClick={onClearHistory}>
-          清除历史记录
-        </ClearButton>
-      )}
+      {onClearHistory && <ClearButton onClick={onClearHistory}>清除历史记录</ClearButton>}
       {histories.map((history) => {
         const gifUrl = gifDataToUrl(history.gifData, history.datetime);
         const { year, month, day, hour, minute, second } = getDateTime(new Date(history.datetime));
