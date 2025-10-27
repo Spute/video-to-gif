@@ -9,6 +9,7 @@ const DefaultConvertSetting: ConvertSetting = {
   rangeStart: 0,
   rangeEnd: 0,
   fadeIn: false,
+  playbackRate: 1.0,
 };
 
 interface UseConvertSettingState {

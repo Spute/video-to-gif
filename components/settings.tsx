@@ -41,7 +41,7 @@ interface Props {
 
 export const Settings: React.FC<Props> = (props) => {
   const { videoUrl, convertSetting, updateConvertSetting, onConvert, isConverting = false } = props;
-  const { frameRate, sizePixel, sizeType, rangeStart, rangeEnd, fadeIn } = convertSetting;
+  const { frameRate, sizePixel, sizeType, rangeStart, rangeEnd, fadeIn, playbackRate } = convertSetting;
 
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
   useEffect(() => {
@@ -118,6 +118,24 @@ export const Settings: React.FC<Props> = (props) => {
             disabled={isConverting}
           />
           {" sec"}
+        </td>
+      </tr>
+      <tr>
+        <th>Playback Speed</th>
+        <td>
+          <select
+            value={playbackRate}
+            onChange={(event) => updateConvertSetting({ playbackRate: parseFloat(event.target.value) })}
+            disabled={isConverting}
+          >
+            <option value={1.0}>1.0x</option>
+            <option value={0.75}>0.75x</option>
+            <option value={1.25}>1.25x</option>
+            <option value={1.5}>1.5x</option>
+            <option value={1.75}>1.75x</option>
+            <option value={2.0}>2.0x</option>
+            <option value={3.0}>3.0x</option>
+          </select>
         </td>
       </tr>
       <tr>
