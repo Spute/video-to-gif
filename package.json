@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && echo '/*\n  Cross-Origin-Opener-Policy: same-origin\n  Cross-Origin-Embedder-Policy: require-corp\n' > out/_headers",
     "start": "next start",
     "lint": "mryhryki-lint",
     "lint:fix": "mryhryki-lint-fix",
