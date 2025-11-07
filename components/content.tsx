@@ -4,7 +4,7 @@ import styled from "styled-components";
 const Wrapper = styled.main`
   bottom: 36px;
   left: 0;
-  overflow-x: hidden;
+  overflow-x: auto;
   overflow-y: scroll;
   position: fixed;
   width: 60vw;
