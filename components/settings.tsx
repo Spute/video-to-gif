@@ -36,11 +36,12 @@ interface Props {
   updateConvertSetting: (partialConvertSetting: Partial<ConvertSetting>) => void;
   videoUrl: string | null;
   onConvert: () => void;
+  onResetVideo: () => void;
   isConverting?: boolean;
 }
 
 export const Settings: React.FC<Props> = (props) => {
-  const { videoUrl, convertSetting, updateConvertSetting, onConvert, isConverting = false } = props;
+  const { videoUrl, convertSetting, updateConvertSetting, onConvert, onResetVideo, isConverting = false } = props;
   const { frameRate, sizePixel, sizeType, rangeStart, rangeEnd, fadeIn, playbackRate } = convertSetting;
 
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
@@ -56,117 +57,126 @@ export const Settings: React.FC<Props> = (props) => {
 
   return (
     <Table>
-      {videoUrl != null ? (
+      <tbody>
+        {videoUrl != null ? (
+          <tr>
+            <th colSpan={2}>
+              <PreviewVideo ref={setVideoRef} src={videoUrl} controls muted />
+            </th>
+          </tr>
+        ) : null}
+        <tr>
+          <th>Frame Rate</th>
+          <td>
+            <input
+              type="range"
+              min="1"
+              max="30"
+              step="1"
+              value={frameRate}
+              onChange={(event) => updateConvertSetting({ frameRate: parseInt(event.target.value, 10) })}
+              disabled={isConverting}
+            />
+            {frameRate}FPS
+          </td>
+        </tr>
+        <tr>
+          <th>Size</th>
+          <td>
+            <select
+              onChange={(event) => {
+                console.debug(event);
+                updateConvertSetting({ sizeType: event.target.value === "height" ? "height" : "width" });
+              }}
+              value={sizeType}
+              disabled={isConverting}
+            >
+              <option value="width">Width</option>
+              <option value="height">Height</option>
+            </select>
+            <input
+              type="text"
+              value={sizePixel}
+              onChange={(event) => {
+                const value = event.target.value;
+                // 允许空值、数字和负号
+                if (value === "" || /^-?\d*$/.test(value)) {
+                  const numValue = value === "" ? -1 : parseInt(value, 10);
+                  // 验证范围 -1 到 10000
+                  if (!isNaN(numValue) && numValue >= -1 && numValue <= 10000) {
+                    updateConvertSetting({ sizePixel: numValue });
+                  }
+                }
+              }}
+              disabled={isConverting}
+            />
+            {" (-1 = Auto)"}
+          </td>
+        </tr>
+        <tr>
+          <th>Range</th>
+          <td>
+            <input
+              type="number"
+              value={rangeStart}
+              onChange={(event) => updateConvertSetting({ rangeStart: parseFloat(event.target.value) })}
+              disabled={isConverting}
+            />
+            {" sec 〜 "}
+            <input
+              type="number"
+              value={rangeEnd}
+              onChange={(event) => updateConvertSetting({ rangeEnd: parseFloat(event.target.value) })}
+              disabled={isConverting}
+            />
+            {" sec"}
+          </td>
+        </tr>
+        <tr>
+          <th>Playback Speed</th>
+          <td>
+            <select
+              value={playbackRate}
+              onChange={(event) => updateConvertSetting({ playbackRate: parseFloat(event.target.value) })}
+              disabled={isConverting}
+            >
+              <option value={1.0}>1.0x</option>
+              <option value={0.75}>0.75x</option>
+              <option value={1.25}>1.25x</option>
+              <option value={1.5}>1.5x</option>
+              <option value={1.75}>1.75x</option>
+              <option value={2.0}>2.0x</option>
+              <option value={3.0}>3.0x</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th>Fade In</th>
+          <td>
+            <input
+              type="checkbox"
+              checked={fadeIn}
+              onChange={(event) => updateConvertSetting({ fadeIn: event.target.checked })}
+              disabled={isConverting}
+            />
+            {" 0.05秒淡入过渡"}
+          </td>
+        </tr>
         <tr>
           <th colSpan={2}>
-            <PreviewVideo ref={setVideoRef} src={videoUrl} controls muted />
+            <Button
+              onClick={onResetVideo}
+              disabled={isConverting}
+              style={{ backgroundColor: "#666", marginRight: "8px" }}
+            >
+              重新选择视频
+            </Button>
+            <Button onClick={onConvert} disabled={isConverting}>
+              {isConverting ? "Converting..." : "Convert"}
+            </Button>
           </th>
         </tr>
-      ) : null}
-      <tr>
-        <th>Frame Rate</th>
-        <td>
-          <input
-            type="range"
-            min="1"
-            max="30"
-            step="1"
-            value={frameRate}
-            onChange={(event) => updateConvertSetting({ frameRate: parseInt(event.target.value, 10) })}
-            disabled={isConverting}
-          />
-          {frameRate}FPS
-        </td>
-      </tr>
-      <tr>
-        <th>Size</th>
-        <td>
-          <select
-            onChange={(event) => {
-              console.debug(event);
-              updateConvertSetting({ sizeType: event.target.value === "height" ? "height" : "width" });
-            }}
-            value={sizeType}
-            disabled={isConverting}
-          >
-            <option value="width">Width</option>
-            <option value="height">Height</option>
-          </select>
-          <input
-            type="text"
-            value={sizePixel}
-            onChange={(event) => {
-              const value = event.target.value;
-              // 允许空值、数字和负号
-              if (value === "" || /^-?\d+$/.test(value)) {
-                const numValue = value === "" ? -1 : parseInt(value, 10);
-                // 验证范围 -1 到 10000
-                if (numValue >= -1 && numValue <= 10000) {
-                  updateConvertSetting({ sizePixel: numValue });
-                }
-              }
-            }}
-            disabled={isConverting}
-          />
-          {" (-1 = Auto)"}
-        </td>
-      </tr>
-      <tr>
-        <th>Range</th>
-        <td>
-          <input
-            type="number"
-            value={rangeStart}
-            onChange={(event) => updateConvertSetting({ rangeStart: parseFloat(event.target.value) })}
-            disabled={isConverting}
-          />
-          {" sec 〜 "}
-          <input
-            type="number"
-            value={rangeEnd}
-            onChange={(event) => updateConvertSetting({ rangeEnd: parseFloat(event.target.value) })}
-            disabled={isConverting}
-          />
-          {" sec"}
-        </td>
-      </tr>
-      <tr>
-        <th>Playback Speed</th>
-        <td>
-          <select
-            value={playbackRate}
-            onChange={(event) => updateConvertSetting({ playbackRate: parseFloat(event.target.value) })}
-            disabled={isConverting}
-          >
-            <option value={1.0}>1.0x</option>
-            <option value={0.75}>0.75x</option>
-            <option value={1.25}>1.25x</option>
-            <option value={1.5}>1.5x</option>
-            <option value={1.75}>1.75x</option>
-            <option value={2.0}>2.0x</option>
-            <option value={3.0}>3.0x</option>
-          </select>
-        </td>
-      </tr>
-      <tr>
-        <th>Fade In</th>
-        <td>
-          <input
-            type="checkbox"
-            checked={fadeIn}
-            onChange={(event) => updateConvertSetting({ fadeIn: event.target.checked })}
-            disabled={isConverting}
-          />
-          {" 0.05秒淡入过渡"}
-        </td>
-      </tr>
-      <tr>
-        <th colSpan={2}>
-          <Button onClick={onConvert} disabled={isConverting}>
-            {isConverting ? "Converting..." : "Convert"}
-          </Button>
-        </th>
-      </tr>
+      </tbody>
     </Table>
   );
 };

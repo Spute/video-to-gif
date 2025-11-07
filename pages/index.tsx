@@ -95,6 +95,7 @@ const Home = () => {
                   updateConvertSetting={updateConvertSetting}
                   videoUrl={videoUrl}
                   onConvert={transcode}
+                  onResetVideo={() => setVideoFile(null)}
                   isConverting={status === "Converting..."}
                 />
               )}

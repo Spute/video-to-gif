@@ -17,7 +17,7 @@ interface UseConvertSettingState {
   updateConvertSetting: (partialConvertSetting: Partial<ConvertSetting>) => void;
   videoFile: File | null;
   videoUrl: string | null;
-  setVideoFile: (videoFile: File) => void;
+  setVideoFile: (videoFile: File | null) => void;
 }
 
 export const useConvertSetting = (): UseConvertSettingState => {
@@ -34,13 +34,17 @@ export const useConvertSetting = (): UseConvertSettingState => {
     });
   };
 
-  const setVideoFile = (videoFile: File) => {
+  const setVideoFile = (videoFile: File | null) => {
     _setVideoFile(videoFile);
-    const url = URL.createObjectURL(videoFile);
-    setVideoUrl(url);
-    const video = document.createElement("video");
-    video.addEventListener("loadedmetadata", () => updateConvertSetting({ rangeStart: 0, rangeEnd: video.duration }));
-    video.src = url;
+    if (videoFile) {
+      const url = URL.createObjectURL(videoFile);
+      setVideoUrl(url);
+      const video = document.createElement("video");
+      video.addEventListener("loadedmetadata", () => updateConvertSetting({ rangeStart: 0, rangeEnd: video.duration }));
+      video.src = url;
+    } else {
+      setVideoUrl(null);
+    }
   };
 
   return { setVideoFile, videoFile, videoUrl, convertSetting, updateConvertSetting };
