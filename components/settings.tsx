@@ -93,9 +93,19 @@ export const Settings: React.FC<Props> = (props) => {
             <option value="height">Height</option>
           </select>
           <input
-            type="number"
+            type="text"
             value={sizePixel}
-            onChange={(event) => updateConvertSetting({ sizePixel: parseInt(event.target.value, 10) })}
+            onChange={(event) => {
+              const value = event.target.value;
+              // 允许空值、数字和负号
+              if (value === "" || /^-?\d+$/.test(value)) {
+                const numValue = value === "" ? -1 : parseInt(value, 10);
+                // 验证范围 -1 到 10000
+                if (numValue >= -1 && numValue <= 10000) {
+                  updateConvertSetting({ sizePixel: numValue });
+                }
+              }
+            }}
             disabled={isConverting}
           />
           {" (-1 = Auto)"}
